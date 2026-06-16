@@ -9,17 +9,28 @@
 > 3 à 5 problèmes principaux **chiffrés** + ce que tu as fait pour les
 > traiter dans le pipeline.
 
-Exemple de format attendu :
-
-> 1. **18 % de manquants sur `purpose`** — imputés par la modalité la plus
->    fréquente (`radio/TV`). Recommandation : remonter la cause auprès
->    de l'équipe collecte (formulaire optionnel ?).
-> 2. ...
+> 1. **3,7 % de manquants sur `customer_segment`** (37 dossiers sur 1000,
+>    fichier complémentaire) — imputés par la **modalité la plus fréquente**
+>    dans le pipeline via `SimpleImputer(strategy="most_frequent")` avant
+>    encodage ordinal. Recommandation : fiabiliser la collecte de cette
+>    variable si Eckmühl souhaite la conserver.
+> 2. **Aucune valeur manquante dans le fichier principal**
+>    `german_credit_raw.csv` — pas d'imputation nécessaire sur les variables
+>    brutes historiques hors supplément.
+> 3. **Deux variables sensibles explicites** (`personal_status_sex`,
+>    `foreign_worker`) — retirées du prétraitement de production et réservées
+>    à l'audit éthique.
 
 ## 2. Verdict éthique
 
 > 2 à 3 alertes principales — variables sensibles, disparate impact
 > chiffré, intersectionnalités si pertinentes.
+
+> 3. **`customer_segment` est probablement corrélé au niveau de richesse**.
+>    Même si cette variable peut sembler utile commercialement, l'utiliser
+>    pour scorer un crédit risque de renforcer des inégalités
+>    socio-économiques ; recommandation : surveillance renforcée et
+>    justification métier explicite.
 
 Exemple :
 
