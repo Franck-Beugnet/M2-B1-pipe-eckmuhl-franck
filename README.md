@@ -27,6 +27,31 @@ jupyter notebook notebooks/M2-B1_template.ipynb       # → s'ouvre dans le navi
 
 Si ces 4 commandes marchent, ton poste est prêt.
 
+## Reproduire les livrables
+
+### Commandes (Windows PowerShell)
+
+```powershell
+# 1) Installer les dépendances
+pip install -r requirements.txt
+
+# 2) Générer le pipeline de préparation
+python src/preprocess.py
+
+# 3) Vérifier le contrat (adapter expected_n_features si nécessaire)
+python contract_test.py
+
+# 4) Ouvrir le notebook et exécuter les sections 6 puis 7
+jupyter notebook notebooks/M2-B1_template.ipynb
+```
+
+### Livrables
+
+- Rapport audit DPO : [audit.md](audit.md)
+- Datasheet dataset : [datasheet.md](datasheet.md)
+- Pipeline persisté : `src/pipeline.joblib`
+- Dataset propre : `data/german_credit_clean.parquet`
+
 > 📦 Le dataset `german_credit_raw.csv` est **déjà dans `data/`** (livré avec
 > le template). Le `.gitignore` versionne ce CSV brut d'entrée mais exclut
 > les sorties que tu produis (`*.parquet`, pipeline `.joblib`) — ne te casse
