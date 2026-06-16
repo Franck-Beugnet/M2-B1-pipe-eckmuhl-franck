@@ -142,7 +142,20 @@ def build_preprocessor() -> ColumnTransformer:
     )
 
 
-def fit_and_save(data_path: Path, output_path: Path) -> None:
+def build_pipeline() -> Pipeline:
+    """Construit le pipeline complet de préparation.
+
+    Le pipeline encapsule le ColumnTransformer pour garantir que les mêmes
+    étapes (imputation, encodage, scaling) soient rejouées en production.
+    """
+    return Pipeline(
+        steps=[
+            ("preprocessor", build_preprocessor()),
+        ]
+    )
+
+
+def fit_and_save(data_path: Path, output_path: Path, sample_size: int = 50) -> None:
     """Fit le pipeline sur tout le dataset et sauve avec joblib.
 
     Note : on fit ici sur tout le dataset (pas de split) car en M2-B1
@@ -150,10 +163,24 @@ def fit_and_save(data_path: Path, output_path: Path) -> None:
     Le pipeline sera rejoué tel quel sur tout nouveau lot de données.
     """
     X, _y = load_dataset(data_path)
-    preprocessor = build_preprocessor()
-    preprocessor.fit(X)
+    pipeline = build_pipeline()
+
+    # Test rapide sur sous-échantillon pour vérifier que le pipeline tourne.
+    n_sample = min(sample_size, len(X))
+    X_sample = X.sample(n=n_sample, random_state=42)
+    X_sample_transformed = pipeline.fit_transform(X_sample)
+
+    # Fit final sur le dataset complet avant persistance.
+    X_transformed = pipeline.fit_transform(X)
+
+    print(
+        "Quick checks → "
+        f"sample_in={X_sample.shape}, sample_out={X_sample_transformed.shape}, "
+        f"full_in={X.shape}, full_out={X_transformed.shape}"
+    )
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump(preprocessor, output_path, compress=3)
+    joblib.dump(pipeline, output_path, compress=3)
     print(f"Pipeline saved → {output_path}")
 
 
