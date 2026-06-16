@@ -29,15 +29,44 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
 # ce choix dans ton notebook ET ton audit.md.
 
 NUMERIC_FEATURES: list[str] = [
-    # ex. "duration_months", "credit_amount", "age", ...
+    "duration_months",
+    "credit_amount",
+    "installment_rate_pct_income",
+    "residence_since_years",
+    "age",
+    "n_existing_credits",
+    "n_people_liable",
 ]
 ORDINAL_FEATURES: dict[str, list[str]] = {
-    # ex. "savings_account": ["< 100 DM", "100-500 DM", "500-1000 DM",
-    #                         ">= 1000 DM", "unknown / no savings"],
-    # Note : l'ordre des modalités encode la sémantique.
+    # Ordre du moins favorable au plus favorable.
+    "savings_account": [
+        "< 100 DM",
+        "100-500 DM",
+        "500-1000 DM",
+        ">= 1000 DM",
+        "unknown / no savings",
+    ],
+    "employment_since": [
+        "unemployed",
+        "< 1 year",
+        "1-4 years",
+        "4-7 years",
+        ">= 7 years",
+    ],
 }
 CATEGORICAL_FEATURES: list[str] = [
-    # ex. "purpose", "housing", "telephone", ...
+    "checking_account_status",
+    "credit_history",
+    "purpose",
+    "other_debtors",
+    "property",
+    "other_installment_plans",
+    "housing",
+    "job",
+    "telephone",
+    # Variables sensibles explicitement exclues du prétraitement M2-B1:
+    # - personal_status_sex
+    # - foreign_worker
 ]
 TARGET_COLUMN: str = "credit_risk"
 TARGET_MAPPING: dict[str, int] = {"good_credit": 0, "bad_credit": 1}
